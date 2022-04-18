@@ -64,7 +64,9 @@
     <Reference Include="Spire.Pdf, Version=5.10.5.20046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
       <HintPath>packages\FreeSpire.PDF.5.10.0\lib\net46\Spire.Pdf.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
@@ -164,13 +166,9 @@
     <Content Include="bin\Debug\Tesseract.dll" />
     <Content Include="bin\Debug\testkurwa.bmp" />
     <Content Include="bin\Debug\x64\leptonica-1.80.0.dll" />
-    <Content Include="bin\Debug\x64\tesseract41.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="bin\Debug\x64\tesseract41.dll" />
     <Content Include="bin\Debug\x86\leptonica-1.80.0.dll" />
-    <Content Include="bin\Debug\x86\tesseract41.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="bin\Debug\x86\tesseract41.dll" />
     <Content Include="bin\x64\Debug\Microsoft.mshtml.dll" />
     <Content Include="bin\x64\Debug\ProofSpot.exe" />
     <Content Include="bin\x64\Debug\ProofSpot.pdb" />

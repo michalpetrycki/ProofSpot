@@ -45,13 +45,15 @@ namespace ProofSpot
                     {
 
                         // Convert pdf to image and return .bmp file path
-                        string imgPath = ConvertPdfToImage(filePath);
+                        string imgPath = ConvertPdfToImage(filePath, 1200);
 
                         // Extract BoM table 
                         string bom = ExtractBomTableFromImage(imgPath);
 
                         // Run tesseract and extract flange objects from BoM
                         List<string> flanges = ExtractFlangesFromBom(bom);
+
+                        string cvImagePath = ConvertPdfToImage(filePath, 300);
 
                         //foreach (string flange in flanges)
                         //{
@@ -62,7 +64,7 @@ namespace ProofSpot
                         //}
 
                         // Run object detection
-                        RunPythonCode();
+                        RunPythonCode(cvImagePath);
 
 
                         //Bitmap img = (Bitmap)ReadPdfAndExtractBom(filePath);
@@ -121,12 +123,12 @@ namespace ProofSpot
          * @saveFile - optional flag which determines if image (converted) file should be saved to the disk
          * @returns - converted image object
          */
-        private static string ConvertPdfToImage(string filePath)
+        private static string ConvertPdfToImage(string filePath, int dpi)
         {
 
             Assembly rootAssembly = Assembly.GetEntryAssembly();
             string rootAssemblyPath = Path.GetDirectoryName(rootAssembly.Location);
-            string saveToPath = $"{rootAssemblyPath}\\image.bmp";
+            string saveToPath = $"{rootAssemblyPath}\\image{dpi}.bmp";
             
             // SpirePDF object
             PdfDocument doc = new PdfDocument();
@@ -135,7 +137,7 @@ namespace ProofSpot
             doc.LoadFromFile(filePath);
 
             // Save above document into image
-            Image img = (Bitmap) doc.SaveAsImage(0, Spire.Pdf.Graphics.PdfImageType.Metafile, 1200, 1200);
+            Image img = (Bitmap) doc.SaveAsImage(0, Spire.Pdf.Graphics.PdfImageType.Metafile, dpi, dpi);
 
             img.Save(saveToPath);
 
@@ -295,19 +297,20 @@ namespace ProofSpot
 
 
 
-        private void RunPythonCode()
+        private void RunPythonCode(string filePath)
         {
 
             List<PidCircle> circles;
 
             // 1. Create Process Info
             var psi = new ProcessStartInfo();
-            psi.FileName = @"C:\Users\Michal\AppData\Local\Programs\PythonCodingPack\python.exe";
+            //psi.FileName = @"C:\Users\Michal\AppData\Local\Programs\PythonCodingPack\python.exe";
+            psi.FileName = @"C:\Users\Michal\AppData\Local\Programs\Python\Python38\python.exe";
 
             // 2. Provide script and arguments
             var script = $@"{rootPath}\python\scrypt.py";
             //var imagePathArg = pathToImage;
-            var imagePathArg = "David2spierdolonegnowno.bmp";
+            var imagePathArg = filePath;
 
             psi.Arguments = $"\"{script}\" \"{imagePathArg}\"";
 

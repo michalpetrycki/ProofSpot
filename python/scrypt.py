@@ -31,6 +31,10 @@ if circles is not None:
     # loop over the (x, y) coordinates and radius of the circles
     for (x, y, r) in circlesRound:
         cv2.circle(output, (x, y), r, (0, 255, 0), 4)
+        pointA = (x, y)
+        pointB = (x - 90, y - 90)
+        cv2.line(output, pointA, pointB, (136, 108, 210), thickness = 13)
+        cv2.ellipse(output, (x - 135, y - 135), (100, 50), 0, 0, 360, (255, 0, 0), thickness = 11)
         print(x, y, r)
 
     plt.figure(figsize=(40, 30), dpi=80)
