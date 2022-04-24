@@ -28,11 +28,13 @@ namespace ProofSpot
             this.openFileDialog1.Title = "Choose ISO file";
             this.openFileDialog1.Filter = "Pdf Files | *pdf";
             this.openFileDialog1.InitialDirectory = @"C:\Users\Michal\Desktop\HonoursProject\ISO";
-            
+
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
+
+                    ClearTextBoxes();
 
                     filePath = this.openFileDialog1.FileName;
 
@@ -58,27 +60,27 @@ namespace ProofSpot
                         // Run object detection
                         string results = RunPythonCode(cvImagePath);
 
-                        List<CircleFound> foundCircles = ProcessResults(results, cvImagePath);
+                        DialogResult dr = MessageBox.Show("Have all circle been found? Proceed?", "Search again",
+                            MessageBoxButtons.YesNo);
 
-                        foreach (CircleFound cf in foundCircles)
+                        if (dr == DialogResult.Yes)
                         {
+                            List<CircleFound> foundCircles = ProcessResults(results, cvImagePath);
 
-                            this.textBox2.Text += (cf.ToString() + Environment.NewLine);
+                            foreach (CircleFound cf in foundCircles)
+                            {
+
+                                this.textBox2.Text += (cf.ToString() + Environment.NewLine);
+
+                            }
+
+                            Console.WriteLine("Progra successfully finished.");
 
                         }
-
-                        //List<PidCircle> circles = GetCirclesObjects(results);
-
-                        Console.WriteLine("elko");
-
-
-                        //Bitmap img = (Bitmap)ReadPdfAndExtractBom(filePath);
-
-                        //string imagePath = ConvertPdfToImageOld(filePath);
-
-                        //string bomText = RunTesseractAgainstBomTable(img);
-
-                        //Console.WriteLine(bomText);
+                        else
+                        {
+                            MessageBox.Show("Exiting. Goodbye");
+                        }
 
                     }
 
@@ -109,7 +111,7 @@ namespace ProofSpot
                     foreach (PidCircle c in circles)
                     {
 
-                        Console.WriteLine($"New circle detected at ({c.coord_x}, {c.coord_y}) with radius {c.radius}");
+                        Console.WriteLine($"New circle detected at ({c.Coord_x}, {c.Coord_y}) with radius {c.Radius}");
                         Console.WriteLine();
 
                         CircleFound cf = RunTesseractForCircle(c, filePath);
@@ -390,7 +392,6 @@ namespace ProofSpot
         {
 
             List<PidCircle> circles = new List<PidCircle>();
-            int index = 0;
 
             string[] lines = circlesString
             .Split(
@@ -423,10 +424,10 @@ namespace ProofSpot
 
             Bitmap originalImage = new Bitmap(filePath);
 
-            int r_x = c.coord_x - c.radius - 5;
-            int r_y = c.coord_y - c.radius - 5;
+            int r_x = c.Coord_x - c.Radius - 5;
+            int r_y = c.Coord_y - c.Radius - 5;
 
-            Rectangle r = new Rectangle(r_x, r_y, c.radius * 2 + 10, c.radius * 2 + 10);
+            Rectangle r = new Rectangle(r_x, r_y, c.Radius * 2 + 10, c.Radius * 2 + 10);
             Bitmap target = new Bitmap(r.Width, r.Height);
 
             using (Graphics g = Graphics.FromImage(target))
@@ -434,7 +435,7 @@ namespace ProofSpot
 
                 g.DrawImage(originalImage, new Rectangle(0, 0, target.Width, target.Height), r, GraphicsUnit.Pixel);
 
-                target.Save($"{c.coord_x}{c.coord_y}{c.radius}.bmp");
+                target.Save($"{c.Coord_x}{c.Coord_y}{c.Radius}.bmp");
 
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
                 path = Path.Combine(path, "tessdata");
@@ -467,23 +468,36 @@ namespace ProofSpot
 
         }
 
+        private void ClearTextBoxes()
+        {
+
+            // LHS textbox
+            if (this.textBox1.Text != string.Empty)
+                this.textBox1.Text = string.Empty;
+
+            // RHS textbox
+            if (this.textBox2.Text != string.Empty)
+                this.textBox2.Text = string.Empty;
+
+        }
+
     }
 
     class PidCircle
     {
 
-        public string tagName { get; set; }
-        public int coord_x { get; set; }
-        public int coord_y { get; set; }
-        public int radius { get; set; }
+        public string TagName { get; set; }
+        public int Coord_x { get; set; }
+        public int Coord_y { get; set; }
+        public int Radius { get; set; }
 
         public PidCircle(string tag, int x, int y, int r)
         {
 
-            tagName = tag;
-            coord_x = x;
-            coord_y = y;
-            radius = r;
+            TagName = tag;
+            Coord_x = x;
+            Coord_y = y;
+            Radius = r;
 
         }
 
@@ -492,21 +506,21 @@ namespace ProofSpot
     class CircleFound
     {
 
-        public PidCircle circle { get; set; }
-        public string circleText { get; set; }
+        public PidCircle Circle { get; set; }
+        public string CircleText { get; set; }
 
         public CircleFound(PidCircle c, string ct)
         {
 
-            circle = c;
-            circleText = ct;
+            Circle = c;
+            CircleText = ct;
 
         }
 
         public override string ToString()
         {
 
-            return $"TagNo: {circle.tagName} ===> Circle No: {circleText}";
+            return $"TagNo: {Circle.TagName} ===> Circle No: {CircleText}";
         }
 
     }
