@@ -8,7 +8,6 @@ import matplotlib.ticker
 
 image = cv2.imread(sys.argv[1])
 output = image.copy()
-height, width = image.shape[:2]
 
 minRadius = 32
 maxRadius = 35
