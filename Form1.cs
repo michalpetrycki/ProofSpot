@@ -134,36 +134,6 @@ namespace ProofSpot
 
         }
 
-        public static string RunTesseractAgainstBomTable(Bitmap bomBitmap)
-        {
-
-            string bomText = string.Empty;
-
-            //Bitmap resizedImage = ResizeImage(bomBitmap, bomBitmap.Width * 2, bomBitmap.Height * 2);
-
-            using (var engine = new TesseractEngine(rootPath + "\\ProofSpot\\tessdata", "eng"))
-            {
-
-                engine.SetVariable("user_defined_dpi", 600);
-
-                using (var img = PixConverter.ToPix(bomBitmap))
-                {
-
-                    using (var page = engine.Process(img))
-                    {
-
-                        bomText = page.GetText();
-
-                    }
-
-                }
-
-            }
-
-            return bomText;
-
-        }
-
         /* This function converts pdf into image file. It uses PDF Spire library to load the file and save it into Image object
          * @filePath - path to pdf file
          * @fileName - optional filename which would be used to save the image (converted) file
@@ -299,50 +269,6 @@ namespace ProofSpot
             return flangeRows;
 
         }
-
-        private Image ReadPdfAndExtractBom(string fileName)
-        {
-
-            string pathToSave = fileName.Replace(".pdf", "");
-            PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(fileName);
-            Image emf = (Bitmap)doc.SaveAsImage(0, Spire.Pdf.Graphics.PdfImageType.Metafile, 1200, 1200);
-
-            Rectangle r = new Rectangle(13555, 615, 5860, 7240);
-            Bitmap target = new Bitmap(r.Width, r.Height);
-
-            emf.Save(pathToSave + "small.bmp");
-
-            using (Graphics g = Graphics.FromImage(target))
-            {
-
-                g.DrawImage(emf, new Rectangle(0, 0, target.Width, target.Height), r, GraphicsUnit.Pixel);
-
-                //target.Save(pathToSave + "small.bmp");
-
-
-            }
-
-            return target;
-
-        }
-
-        private string ConvertPdfToImageOld(string fileName)
-        {
-
-            string pathToSave = fileName.Replace(".pdf", "");
-            pathToSave += "testkurwa.bmp";
-            PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(fileName);
-            Image emf = (Bitmap)doc.SaveAsImage(0, Spire.Pdf.Graphics.PdfImageType.Metafile, 300, 300);
-
-            emf.Save(pathToSave);
-
-            return pathToSave;
-
-        }
-
-
 
         private string RunPythonCode(string filePath)
         {
