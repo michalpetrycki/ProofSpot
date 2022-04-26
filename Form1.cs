@@ -24,7 +24,6 @@ namespace ProofSpot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string filePath = "";
             this.openFileDialog1.Title = "Choose ISO file";
             this.openFileDialog1.Filter = "Pdf Files | *pdf";
             this.openFileDialog1.InitialDirectory = @"C:\Users\Michal\Desktop\HonoursProject\ISO";
@@ -36,7 +35,7 @@ namespace ProofSpot
 
                     ClearTextBoxes();
 
-                    filePath = this.openFileDialog1.FileName;
+                    string filePath = this.openFileDialog1.FileName;
 
                     if (File.Exists(filePath))
                     {
@@ -176,8 +175,6 @@ namespace ProofSpot
             string rootAssemblyPath = Path.GetDirectoryName(rootAssembly.Location);
             string saveToPath = $"{rootAssemblyPath}\\imageBom.bmp";
 
-            string bomFilePath = filePath;
-
             Image image = Bitmap.FromFile(filePath);
 
             //// Create rectangle which determines where the Bom table is within the image
@@ -216,15 +213,15 @@ namespace ProofSpot
             Bitmap bomBmp = (Bitmap) Bitmap.FromFile(filePath);
 
             // Run tesseract
-            using (var engine = new TesseractEngine(rootPath + "\\tessdata", "eng"))
+            using (TesseractEngine engine = new TesseractEngine(rootPath + "\\tessdata", "eng"))
             {
 
                 engine.SetVariable("user_defined_dpi", 600);
 
-                using (var img = PixConverter.ToPix(bomBmp))
+                using (Pix img = PixConverter.ToPix(bomBmp))
                 {
 
-                    using (var page = engine.Process(img, PageSegMode.AutoOsd))
+                    using (Page page = engine.Process(img, PageSegMode.AutoOsd))
                     {
 
                         bomText = page.GetText();
@@ -274,14 +271,14 @@ namespace ProofSpot
         {
 
             // 1. Create Process Info
-            var psi = new ProcessStartInfo();
-            //psi.FileName = @"C:\Users\Michal\AppData\Local\Programs\PythonCodingPack\python.exe";
-            psi.FileName = @"C:\Users\Michal\AppData\Local\Programs\Python\Python38\python.exe";
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = @"C:\Users\Michal\AppData\Local\Programs\Python\Python38\python.exe"
+            };
 
             // 2. Provide script and arguments
-            var script = $@"{rootPath}\python\scrypt.py";
-            //var imagePathArg = pathToImage;
-            var imagePathArg = filePath;
+            string script = $@"{rootPath}\python\scrypt.py";
+            string imagePathArg = filePath;
 
             psi.Arguments = $"\"{script}\" \"{imagePathArg}\"";
 
@@ -292,10 +289,10 @@ namespace ProofSpot
             psi.RedirectStandardError = true;
 
             // 4. 
-            var errors = "";
-            var results = "";
+            string errors = string.Empty;
+            string results = string.Empty;
 
-            using (var process = Process.Start(psi))
+            using (Process process = Process.Start(psi))
             {
 
                 errors = process.StandardError.ReadToEnd();
@@ -344,8 +341,6 @@ namespace ProofSpot
 
         private CircleFound RunTesseractForCircle(PidCircle c, string filePath)
         {
-
-            string circleText = string.Empty;
             CircleFound cf;
 
             Bitmap originalImage = new Bitmap(filePath);
@@ -363,23 +358,22 @@ namespace ProofSpot
 
                 target.Save($"{c.Coord_x}{c.Coord_y}{c.Radius}.bmp");
 
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+                string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
                 path = Path.Combine(path, "tessdata");
                 path = path.Replace("file:\\", "");
 
-                using (var engine = new TesseractEngine(path, "eng"))
+                using (TesseractEngine engine = new TesseractEngine(path, "eng"))
                 {
 
                     engine.SetVariable("user_defined_dpi", 900);
                     
-                    using (var img = PixConverter.ToPix(target))
+                    using (Pix img = PixConverter.ToPix(target))
                     {
 
-                        using (var page = engine.Process(img, PageSegMode.CircleWord))
+                        using (Page page = engine.Process(img, PageSegMode.CircleWord))
                         {
 
-                            circleText = page.GetText();
-
+                            string circleText = page.GetText();
                             cf = new CircleFound(c, circleText);
                             
                         }
