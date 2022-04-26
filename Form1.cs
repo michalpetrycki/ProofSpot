@@ -15,14 +15,14 @@ namespace ProofSpot
     public partial class Form1 : Form
     {
 
-        static string rootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        static readonly string rootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Title = "Choose ISO file";
             this.openFileDialog1.Filter = "Pdf Files | *pdf";
@@ -175,7 +175,7 @@ namespace ProofSpot
             string rootAssemblyPath = Path.GetDirectoryName(rootAssembly.Location);
             string saveToPath = $"{rootAssemblyPath}\\imageBom.bmp";
 
-            Image image = Bitmap.FromFile(filePath);
+            Image image = Image.FromFile(filePath);
 
             //// Create rectangle which determines where the Bom table is within the image
             Rectangle r = new Rectangle(13555, 615, 5860, 7240);
@@ -210,7 +210,7 @@ namespace ProofSpot
             List<string> flangeRows = new List<string>();
             string[] lines;
 
-            Bitmap bomBmp = (Bitmap) Bitmap.FromFile(filePath);
+            Bitmap bomBmp = (Bitmap) Image.FromFile(filePath);
 
             // Run tesseract
             using (TesseractEngine engine = new TesseractEngine(rootPath + "\\tessdata", "eng"))
