@@ -3,8 +3,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker
-
-
+import random
 
 image = cv2.imread(sys.argv[1])
 output = image.copy()
@@ -14,6 +13,10 @@ maxRadius = 35
 
 tagName = 'TG-000-'
 index = 1
+
+statuses = ['New', 'Assembled', 'Tightened', 'Tested']
+colours = [(255, 255, 255), (254,74,73), (255,212,73), (71,157,21)]
+
 
 # minRadius 33 and maxradius 34 seems to be optimal
 
@@ -46,7 +49,9 @@ if circles is not None:
         cv2.line(output, pointA, pointB, (136, 108, 210), thickness = 13)
 
         # draw rectangle as annotation box 
-        cv2.rectangle(output, (x - 332, y - 172), (x - 95, y - 95), color = (255, 0, 0), thickness = 11)
+        background_colour = colours[random.randrange(0, len(statuses))] # get rando colour, it will state a flange status
+        cv2.rectangle(output, (x - 335, y - 175), (x - 93, y - 93), color = (0, 0, 0), thickness = 5)
+        cv2.rectangle(output, (x - 332, y - 172), (x - 95, y - 95), color = background_colour, thickness = -1)
 
         tag = ''
         if index < 10: tag = tagName + '00' + str(index)
@@ -54,7 +59,7 @@ if circles is not None:
         else: tag = tagName + str(index)
 
         # draw text (img, text, (coord_x, coord_y), font, font_size, font_color, font_thickness, line?)
-        cv2.putText(output, tag, (x - 315, y - 122), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 4, cv2.LINE_AA)
+        cv2.putText(output, tag, (x - 315, y - 122), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 4, cv2.LINE_AA)
         print(tag, x, y, r)
 
         index += 1
