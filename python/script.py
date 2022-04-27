@@ -45,7 +45,7 @@ def draw_line(x, y):
 
 def draw_annotation(x, y):
     # draw rectangle as annotation box 
-    background_colour = colours[random.randrange(0, len(statuses))] # get rando colour, it will state a flange status
+    background_colour = colours[random.randrange(0, len(statuses))] # get random colour, it will state a flange status
     cv2.rectangle(output, (x - 335, y - 175), (x - 93, y - 93), color = (0, 0, 0), thickness = 5)
     cv2.rectangle(output, (x - 332, y - 172), (x - 95, y - 95), color = background_colour, thickness = -1)
 
