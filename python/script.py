@@ -31,6 +31,36 @@ circles = cv2.HoughCircles(image=gray,
                            maxRadius=maxRadius                           
                           )
 
+
+def draw_line(x, y):
+    # line - starting point
+    pointA = (x - 30, y - 30)
+
+    # line - ending point
+    pointB = (x - 90, y - 90)
+
+    # draw line from pointA to pointB, (r, g, b) color), thickness
+    cv2.line(output, pointA, pointB, (136, 108, 210), thickness = 13)
+
+
+def draw_annotation(x, y):
+    # draw rectangle as annotation box 
+    background_colour = colours[random.randrange(0, len(statuses))] # get rando colour, it will state a flange status
+    cv2.rectangle(output, (x - 335, y - 175), (x - 93, y - 93), color = (0, 0, 0), thickness = 5)
+    cv2.rectangle(output, (x - 332, y - 172), (x - 95, y - 95), color = background_colour, thickness = -1)
+
+
+def print_text(x, y):
+    tag = ''
+    if index < 10: tag = tagName + '00' + str(index)
+    elif index < 100: tag = tagName + '0' + str(index)
+    else: tag = tagName + str(index)
+
+    # draw text (img, text, (coord_x, coord_y), font, font_size, font_color, font_thickness, line?)
+    cv2.putText(output, tag, (x - 315, y - 122), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 4, cv2.LINE_AA)
+
+    return tag
+
 if circles is not None:
     # convert the (x, y) coordinates and radius of the circles to integers
     circlesRound = np.round(circles[0, :]).astype('int')
@@ -39,27 +69,12 @@ if circles is not None:
         # draw circle around the detected object
         cv2.circle(output, (x, y), r, (0, 255, 0), 4)
 
-        # line - starting point
-        pointA = (x - 30, y - 30)
+        draw_line(x, y)
+        
+        draw_annotation(x, y)
 
-        # line - ending point
-        pointB = (x - 90, y - 90)
-
-        # draw line from pointA to pointB, (r, g, b) color), thickness
-        cv2.line(output, pointA, pointB, (136, 108, 210), thickness = 13)
-
-        # draw rectangle as annotation box 
-        background_colour = colours[random.randrange(0, len(statuses))] # get rando colour, it will state a flange status
-        cv2.rectangle(output, (x - 335, y - 175), (x - 93, y - 93), color = (0, 0, 0), thickness = 5)
-        cv2.rectangle(output, (x - 332, y - 172), (x - 95, y - 95), color = background_colour, thickness = -1)
-
-        tag = ''
-        if index < 10: tag = tagName + '00' + str(index)
-        elif index < 100: tag = tagName + '0' + str(index)
-        else: tag = tagName + str(index)
-
-        # draw text (img, text, (coord_x, coord_y), font, font_size, font_color, font_thickness, line?)
-        cv2.putText(output, tag, (x - 315, y - 122), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 4, cv2.LINE_AA)
+        tag = print_text(x, y)
+        
         print(tag, x, y, r)
 
         index += 1

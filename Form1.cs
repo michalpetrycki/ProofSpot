@@ -277,7 +277,7 @@ namespace ProofSpot
             };
 
             // 2. Provide script and arguments
-            string script = $@"{rootPath}\python\scrypt.py";
+            string script = $@"{rootPath}\python\script.py";
             string imagePathArg = filePath;
 
             psi.Arguments = $"\"{script}\" \"{imagePathArg}\"";
