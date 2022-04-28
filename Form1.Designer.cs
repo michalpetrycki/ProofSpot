@@ -67,16 +67,16 @@ namespace ProofSpot
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(295, 37);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(154, 13);
+            this.label1.Size = new System.Drawing.Size(149, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Bills of Materials Text Extracted";
+            this.label1.Text = "Bill of Materials Text Extracted";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(680, 37);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.Size = new System.Drawing.Size(95, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Circles Association";
             // 
@@ -99,8 +99,8 @@ namespace ProofSpot
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Spotter";
+            this.Text = "Spotter";
             this.ResumeLayout(false);
             this.PerformLayout();
 

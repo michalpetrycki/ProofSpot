@@ -26,7 +26,7 @@ namespace ProofSpot
         {
             this.openFileDialog1.Title = "Choose ISO file";
             this.openFileDialog1.Filter = "Pdf Files | *pdf";
-            this.openFileDialog1.InitialDirectory = @"C:\Users\Michal\Desktop\HonoursProject\ISO";
+            this.openFileDialog1.InitialDirectory = @"C:\";
 
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -73,7 +73,7 @@ namespace ProofSpot
 
                             }
 
-                            Console.WriteLine("Progra successfully finished.");
+                            Console.WriteLine("Program successfully finished.");
 
                         }
                         else
